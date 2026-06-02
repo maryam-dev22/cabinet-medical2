@@ -15,20 +15,11 @@ class SetLocaleFromSession
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check URL parameter first
-        if ($request->has('locale') && in_array($request->get('locale'), ['en', 'fr'])) {
-            app()->setLocale($request->get('locale'));
-            session()->put('locale', $request->get('locale'));
+        if (Session::has('locale')) {
+            App::setLocale(Session::get('locale'));
         }
-        // Then check cookie
-        elseif ($request->cookie('locale') && in_array($request->cookie('locale'), ['en', 'fr'])) {
-            app()->setLocale($request->cookie('locale'));
-        }
-        // Finally check session
-        elseif (session()->has('locale') && in_array(session('locale'), ['en', 'fr'])) {
-            app()->setLocale(session('locale'));
-        }
-        
+
         return $next($request);
     }
-}
+    }
+
